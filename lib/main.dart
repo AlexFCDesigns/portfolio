@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildNavButton('Sobre Mí', 0),
+            _buildNavButton('Inicio', 0),
             _buildNavButton('Proyectos', 1),
             _buildNavButton('Contacto', 2),
           ],
@@ -327,12 +327,18 @@ class _SobreMiPageState extends State<SobreMiPage>
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton.icon(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        launchUrl(
+                                          Uri.parse(
+                                              'https://alexfcdesigns.github.io/portfolio/assets/files/Curriculum.pdf'),
+                                          mode: LaunchMode.externalApplication,
+                                        );
+                                      },
                                       icon: const Icon(
                                           Icons.remove_red_eye_rounded,
                                           color: Colors.white),
                                       label: const Text(
-                                        'Ver CV',
+                                        'Descargar CV',
                                         style: TextStyle(
                                             fontSize: 18, color: Colors.white),
                                       ),
