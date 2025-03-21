@@ -25,6 +25,10 @@ jobs:
       - name: 🛠️ Build para Web
         run: flutter build web --release
 
+      - name: 🔧 Ajustar base href
+        run: |
+          sed -i 's|<base href="/">|<base href="/portfolio/">|' build/web/index.html
+
       - name: 🚀 Deploy a GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
