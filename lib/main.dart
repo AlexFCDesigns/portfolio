@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 void main() {
@@ -224,12 +225,17 @@ class _SobreMiPageState extends State<SobreMiPage>
                                     ),
                                   ),
                                   ElevatedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                        Icons.remove_red_eye_rounded,
+                                    onPressed: () {
+                                      launchUrl(
+                                        Uri.parse(
+                                            'https://alexfcdesigns.github.io/portfolio/assets/files/cv_alejandro.pdf'),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.download,
                                         color: Colors.white),
                                     label: const Text(
-                                      'Ver CV',
+                                      'Descargar CV',
                                       style: TextStyle(
                                           fontSize: 16, color: Colors.white),
                                     ),
