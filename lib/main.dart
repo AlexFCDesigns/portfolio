@@ -228,7 +228,7 @@ class _SobreMiPageState extends State<SobreMiPage>
                                     onPressed: () {
                                       launchUrl(
                                         Uri.parse(
-                                            'https://alexfcdesigns.github.io/portfolio/assets/files/cv_alejandro.pdf'),
+                                            'https://alexfcdesigns.github.io/portfolio/assets/files/Curriculum.pdf'),
                                         mode: LaunchMode.externalApplication,
                                       );
                                     },
