@@ -658,8 +658,17 @@ class _ProjectCardState extends State<ProjectCard> {
   }
 }
 
-class ContactoPage extends StatelessWidget {
+class ContactoPage extends StatefulWidget {
   const ContactoPage({super.key});
+
+  @override
+  State<ContactoPage> createState() => _ContactoPageState();
+}
+
+class _ContactoPageState extends State<ContactoPage> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -834,34 +843,27 @@ class ContactoPage extends StatelessWidget {
                                     children: [
                                       Expanded(
                                         child: _buildTextField(
-                                            'Nombre/Empresa', 'Nombre/Empresa'),
+                                            'Nombre/Empresa', 'Nombre/Empresa',
+                                            controller: nameController),
                                       ),
                                       const SizedBox(width: 20),
                                       Expanded(
-                                        child:
-                                            _buildTextField('Email', 'Email'),
+                                        child: _buildTextField('Email', 'Email',
+                                            controller: emailController),
                                       ),
                                     ],
                                   ),
                                   const SizedBox(height: 20),
                                   _buildTextField('Mensaje', 'Mensaje',
-                                      maxLines: 5),
+                                      maxLines: 5,
+                                      controller: messageController),
                                   const SizedBox(height: 20),
                                   ElevatedButton(
                                     onPressed: () async {
                                       final serviceId = 'service_yzajrev';
                                       final templateId = 'template_rpc99eh';
                                       final publicKey = 'exvv38Kgvsn5D7Y0W';
-                                      final nameController = TextEditingController(
-                                          text:
-                                              ''); // reemplazar por valor real del formulario
-                                      final emailController = TextEditingController(
-                                          text:
-                                              ''); // reemplazar por valor real del formulario
-                                      final messageController =
-                                          TextEditingController(
-                                              text:
-                                                  ''); // reemplazar por valor real del formulario
+
                                       final url = Uri.parse(
                                           'https://api.emailjs.com/api/v1.0/email/send');
                                       final response = await http.post(
@@ -964,7 +966,8 @@ class ContactoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(String label, String hint, {int maxLines = 1}) {
+  Widget _buildTextField(String label, String hint,
+      {int maxLines = 1, TextEditingController? controller}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -978,8 +981,8 @@ class ContactoPage extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Container(
-          decoration: BoxDecoration(
-            boxShadow: const [
+          decoration: const BoxDecoration(
+            boxShadow: [
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10,
@@ -989,11 +992,12 @@ class ContactoPage extends StatelessWidget {
             ],
           ),
           child: TextField(
+            controller: controller,
             maxLines: maxLines,
             style: const TextStyle(color: Colors.black),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: TextStyle(color: Colors.black),
+              hintStyle: const TextStyle(color: Colors.black),
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
