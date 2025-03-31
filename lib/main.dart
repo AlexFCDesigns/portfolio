@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(const MyApp());
@@ -716,7 +718,55 @@ class ContactoPage extends StatelessWidget {
                                       maxLines: 5),
                                   const SizedBox(height: 20),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      final serviceId = 'service_yzajrev';
+                                      final templateId = 'template_rpc99eh';
+                                      final publicKey = 'exvv38Kgvsn5D7Y0W';
+                                      final nameController = TextEditingController(
+                                          text:
+                                              ''); // reemplazar por valor real del formulario
+                                      final emailController = TextEditingController(
+                                          text:
+                                              ''); // reemplazar por valor real del formulario
+                                      final messageController =
+                                          TextEditingController(
+                                              text:
+                                                  ''); // reemplazar por valor real del formulario
+                                      final url = Uri.parse(
+                                          'https://api.emailjs.com/api/v1.0/email/send');
+                                      final response = await http.post(
+                                        url,
+                                        headers: {
+                                          'origin': 'http://localhost',
+                                          'Content-Type': 'application/json',
+                                        },
+                                        body: json.encode({
+                                          'service_id': serviceId,
+                                          'template_id': templateId,
+                                          'user_id': publicKey,
+                                          'template_params': {
+                                            'user_name': nameController.text,
+                                            'user_email': emailController.text,
+                                            'message': messageController.text,
+                                          }
+                                        }),
+                                      );
+                                      if (response.statusCode == 200) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Mensaje enviado con éxito')),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Error al enviar el mensaje')),
+                                        );
+                                      }
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
                                       padding: const EdgeInsets.symmetric(
@@ -798,7 +848,55 @@ class ContactoPage extends StatelessWidget {
                                       maxLines: 5),
                                   const SizedBox(height: 20),
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      final serviceId = 'service_yzajrev';
+                                      final templateId = 'template_rpc99eh';
+                                      final publicKey = 'exvv38Kgvsn5D7Y0W';
+                                      final nameController = TextEditingController(
+                                          text:
+                                              ''); // reemplazar por valor real del formulario
+                                      final emailController = TextEditingController(
+                                          text:
+                                              ''); // reemplazar por valor real del formulario
+                                      final messageController =
+                                          TextEditingController(
+                                              text:
+                                                  ''); // reemplazar por valor real del formulario
+                                      final url = Uri.parse(
+                                          'https://api.emailjs.com/api/v1.0/email/send');
+                                      final response = await http.post(
+                                        url,
+                                        headers: {
+                                          'origin': 'http://localhost',
+                                          'Content-Type': 'application/json',
+                                        },
+                                        body: json.encode({
+                                          'service_id': serviceId,
+                                          'template_id': templateId,
+                                          'user_id': publicKey,
+                                          'template_params': {
+                                            'user_name': nameController.text,
+                                            'user_email': emailController.text,
+                                            'message': messageController.text,
+                                          }
+                                        }),
+                                      );
+                                      if (response.statusCode == 200) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Mensaje enviado con éxito')),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  'Error al enviar el mensaje')),
+                                        );
+                                      }
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
                                       padding: const EdgeInsets.symmetric(
@@ -835,7 +933,8 @@ class ContactoPage extends StatelessWidget {
                   children: [
                     IconButton(
                       onPressed: () {
-                        // Acción para ir a GitHub
+                        launchUrl(
+                            Uri.parse('https://github.com/AlexFCDesigns'));
                       },
                       icon: Image.asset(
                         'assets/images/github.png',
@@ -846,7 +945,8 @@ class ContactoPage extends StatelessWidget {
                     const SizedBox(width: 20),
                     IconButton(
                       onPressed: () {
-                        // Acción para ir a LinkedIn
+                        launchUrl(Uri.parse(
+                            'https://www.linkedin.com/in/alejandro-fernández-crespo-2a1045144/'));
                       },
                       icon: Image.asset(
                         'assets/images/linkedin.png',
