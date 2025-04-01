@@ -266,6 +266,7 @@ class _SobreMiPageState extends State<SobreMiPage>
                       ],
                     )
                   : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Expanded(
                           flex: 2,
@@ -488,12 +489,16 @@ class _ProyectosPageState extends State<ProyectosPage> {
 
   Widget _buildProjectImage(int index) {
     final images = ['assets/images/wimu.png', 'assets/images/UAL.png'];
+    final screenWidth = MediaQuery.of(context).size.width;
+    final double imageWidth = screenWidth < 700 ? 300 : 350;
+    final double imageHeight = screenWidth < 700 ? 180 : 220;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Image.asset(
         images[index],
-        width: 350,
-        height: 220,
+        width: imageWidth,
+        height: imageHeight,
         fit: BoxFit.cover,
       ),
     );
@@ -517,49 +522,101 @@ class _ProyectosPageState extends State<ProyectosPage> {
     ];
     final icons = [Icons.sports_soccer, Icons.fitness_center];
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isMobile = constraints.maxWidth < 600;
+
+        return ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: Column(
+            crossAxisAlignment:
+                isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
             children: [
-              Icon(icons[index], color: Colors.teal.shade400, size: 28),
-              const SizedBox(width: 10),
-              Text(
-                titles[index],
-                style: GoogleFonts.urbanist(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          ...descriptions[index].map((line) => Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Card(
-                  color: Colors.white,
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 12.0),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icons[index], color: Colors.teal.shade400, size: 28),
+                  const SizedBox(width: 10),
+                  Flexible(
                     child: Text(
-                      line,
+                      titles[index],
                       style: GoogleFonts.urbanist(
-                        fontSize: 16,
-                        color: Colors.grey.shade800,
-                        height: 1.4,
+                        fontSize: isMobile ? 20 : 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ...descriptions[index].map(
+                (line) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                      child: Text(
+                        line,
+                        style: GoogleFonts.urbanist(
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                          height: 1.4,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              )),
-        ],
+              ),
+              const SizedBox(height: 20),
+              if (index == 1)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade100,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    'Demo en desarrollo',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.orange.shade800,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ProjectDetailPage extends StatelessWidget {
+  final String title;
+
+  const ProjectDetailPage({super.key, required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Colors.teal.shade400,
+      ),
+      body: Center(
+        child: Text(
+          'Detalles del proyecto: $title',
+          style: GoogleFonts.urbanist(fontSize: 24),
+        ),
       ),
     );
   }
@@ -589,12 +646,13 @@ class _ProjectCardState extends State<ProjectCard> {
     return LayoutBuilder(
       builder: (context, constraints) {
         bool isMobile = constraints.maxWidth < 600;
+        double size = isMobile ? 250 : constraints.maxWidth * 0.3;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              height: isMobile ? 250 : 400,
-              width: isMobile ? 250 : 400,
+              height: size,
+              width: size,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
@@ -609,8 +667,8 @@ class _ProjectCardState extends State<ProjectCard> {
               ),
               child: Center(
                 child: Container(
-                  height: isMobile ? 200 : 250,
-                  width: isMobile ? 200 : 250,
+                  height: size,
+                  width: size,
                   child: MouseRegion(
                     onEnter: (_) => setState(() => _isHovered = true),
                     onExit: (_) => setState(() => _isHovered = false),
@@ -767,6 +825,10 @@ class _ContactoPageState extends State<ContactoPage> {
                                               content: Text(
                                                   'Mensaje enviado con éxito')),
                                         );
+
+                                        nameController.clear();
+                                        emailController.clear();
+                                        messageController.clear();
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
@@ -839,15 +901,18 @@ class _ContactoPageState extends State<ContactoPage> {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Row(
+                                  Wrap(
+                                    spacing: 20,
+                                    runSpacing: 20,
                                     children: [
-                                      Expanded(
+                                      SizedBox(
+                                        width: constraints.maxWidth / 2 - 60,
                                         child: _buildTextField(
                                             'Nombre/Empresa', 'Nombre/Empresa',
                                             controller: nameController),
                                       ),
-                                      const SizedBox(width: 20),
-                                      Expanded(
+                                      SizedBox(
+                                        width: constraints.maxWidth / 2 - 60,
                                         child: _buildTextField('Email', 'Email',
                                             controller: emailController),
                                       ),
@@ -890,6 +955,10 @@ class _ContactoPageState extends State<ContactoPage> {
                                               content: Text(
                                                   'Mensaje enviado con éxito')),
                                         );
+
+                                        nameController.clear();
+                                        emailController.clear();
+                                        messageController.clear();
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(
