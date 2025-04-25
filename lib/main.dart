@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:file_saver/file_saver.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -227,11 +229,18 @@ class _SobreMiPageState extends State<SobreMiPage>
                                     ),
                                   ),
                                   ElevatedButton.icon(
-                                    onPressed: () {
-                                      launchUrl(
-                                        Uri.parse(
-                                            'https://alexfcdesigns.github.io/portfolio/assets/files/Curriculum.pdf'),
-                                        mode: LaunchMode.externalApplication,
+                                    onPressed: () async {
+                                      final bytes = await rootBundle
+                                          .load('assets/files/Curriculum.pdf');
+                                      final buffer = bytes.buffer;
+
+                                      await FileSaver.instance.saveFile(
+                                        name: 'Curriculum',
+                                        bytes: buffer.asUint8List(
+                                            bytes.offsetInBytes,
+                                            bytes.lengthInBytes),
+                                        ext: 'pdf',
+                                        mimeType: MimeType.pdf,
                                       );
                                     },
                                     icon: const Icon(Icons.download,
@@ -276,6 +285,7 @@ class _SobreMiPageState extends State<SobreMiPage>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
+                                  textAlign: TextAlign.center,
                                   'Hola, mi nombre es Alejandro',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 50,
@@ -284,6 +294,7 @@ class _SobreMiPageState extends State<SobreMiPage>
                                   ),
                                 ),
                                 Text(
+                                  textAlign: TextAlign.center,
                                   'Ingeniero Informático',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 50,
@@ -292,6 +303,7 @@ class _SobreMiPageState extends State<SobreMiPage>
                                   ),
                                 ),
                                 Text(
+                                  textAlign: TextAlign.center,
                                   'Apasionado de la tecnología y el desarrollo de software.',
                                   style: GoogleFonts.urbanist(
                                     fontSize: 30,
@@ -330,11 +342,18 @@ class _SobreMiPageState extends State<SobreMiPage>
                                     ),
                                     const SizedBox(width: 20),
                                     ElevatedButton.icon(
-                                      onPressed: () {
-                                        launchUrl(
-                                          Uri.parse(
-                                              'https://alexfcdesigns.github.io/portfolio/assets/files/Curriculum.pdf'),
-                                          mode: LaunchMode.externalApplication,
+                                      onPressed: () async {
+                                        final bytes = await rootBundle.load(
+                                            'assets/files/Curriculum.pdf');
+                                        final buffer = bytes.buffer;
+
+                                        await FileSaver.instance.saveFile(
+                                          name: 'Curriculum',
+                                          bytes: buffer.asUint8List(
+                                              bytes.offsetInBytes,
+                                              bytes.lengthInBytes),
+                                          ext: 'pdf',
+                                          mimeType: MimeType.pdf,
                                         );
                                       },
                                       icon: const Icon(
@@ -384,7 +403,7 @@ class ProyectosPage extends StatefulWidget {
 }
 
 class _ProyectosPageState extends State<ProyectosPage> {
-  final List<bool> _isVisibleList = [false, false];
+  final List<bool> _isVisibleList = [false, false, false];
 
   void _setVisible(int index, bool visible) {
     if (visible && !_isVisibleList[index]) {
@@ -416,7 +435,7 @@ class _ProyectosPageState extends State<ProyectosPage> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              itemCount: 2,
+              itemCount: 3,
               itemBuilder: (context, index) {
                 return VisibilityDetector(
                   key: Key('project_$index'),
@@ -488,7 +507,11 @@ class _ProyectosPageState extends State<ProyectosPage> {
   }
 
   Widget _buildProjectImage(int index) {
-    final images = ['assets/images/wimu.png', 'assets/images/UAL.png'];
+    final images = [
+      'assets/images/wimu.png',
+      'assets/images/UAL.png',
+      'assets/images/logocanton.png'
+    ];
     final screenWidth = MediaQuery.of(context).size.width;
     final double imageWidth = screenWidth < 700 ? 300 : 350;
     final double imageHeight = screenWidth < 700 ? 180 : 220;
@@ -505,7 +528,11 @@ class _ProyectosPageState extends State<ProyectosPage> {
   }
 
   Widget _buildProjectText(int index) {
-    final titles = ['WIMU – MyWimu App', 'TFG – UAL'];
+    final titles = [
+      'WIMU – MyWimu App',
+      'TFG – UAL',
+      'Web Restaurante',
+    ];
     final descriptions = [
       [
         'App multiplataforma para monitorizar el rendimiento de jugadores.',
@@ -518,9 +545,18 @@ class _ProyectosPageState extends State<ProyectosPage> {
         'Registro de usuarios y entrenadores.',
         'Tecnologías: Flutter, Dart, Firebase.',
         'UI diseñada en Figma.',
+      ],
+      [
+        'Web informativa y menú de restaurante.',
+        'Tecnologías: Flutter, Dart, Firebase y GitHub.',
+        'Dashboard para administrador.',
       ]
     ];
-    final icons = [Icons.sports_soccer, Icons.fitness_center];
+    final icons = [
+      Icons.sports_soccer,
+      Icons.fitness_center,
+      Icons.restaurant_menu,
+    ];
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -592,6 +628,55 @@ class _ProyectosPageState extends State<ProyectosPage> {
                     ),
                   ),
                 ),
+              if (index == 2)
+                InkWell(
+                  onTap: () {
+                    launchUrl(
+                      Uri.parse('https://restaurantecanton.com/inicio'),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: Text(
+                      'Visitar Web',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.orange.shade800,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     launchUrl(
+              //       Uri.parse('https://restaurantecanton.com/inicio'),
+              //       mode: LaunchMode.externalApplication,
+              //     );
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.teal.shade400,
+              //     padding: const EdgeInsets.symmetric(
+              //         horizontal: 24, vertical: 12),
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(30),
+              //     ),
+              //   ),
+              //   child: const Text(
+              //     'Visitar Web',
+              //     style: TextStyle(
+              //       fontSize: 16,
+              //       color: Colors.white,
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         );
